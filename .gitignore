@@ -1,0 +1,19 @@
+# Build artifacts
+*.elf
+*.bin
+*.hex
+*.o
+*.a
+*.map
+*.lst
+
+# Debugger
+*.gdbinit
+.gdb_history
+
+# Editor / OS cruft
+*.swp
+*~
+.vscode/
+.idea/
+.DS_Store

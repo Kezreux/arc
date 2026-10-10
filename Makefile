@@ -4,7 +4,7 @@ OBJCOPY = arm-none-eabi-objcopy
 CFLAGS = -mcpu=cortex-m4 -mthumb -Wall -O0 -g -ffreestanding -nostdlib
 LDFLAGS = -T linker.ld -nostdlib
 
-SRCS = startup.c main.c
+SRCS = startup.c main.c gpio/gpio.c
 
 all: firmware.bin
 
