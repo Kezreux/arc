@@ -1,23 +1,40 @@
-CC = arm-none-eabi-gcc
+CC      = arm-none-eabi-gcc
 OBJCOPY = arm-none-eabi-objcopy
+SIZE    = arm-none-eabi-size
 
-CFLAGS = -mcpu=cortex-m4 -mthumb -Wall -O0 -g -ffreestanding -nostdlib
-LDFLAGS = -T linker.ld -nostdlib
+SRC_DIRS = src drivers startup
+BUILD    = build
+TARGET   = $(BUILD)/firmware
 
-SRCS = startup.c main.c gpio/gpio.c
+SRCS = $(shell find $(SRC_DIRS) -name '*.c')
+INC_DIRS = $(shell find $(SRC_DIRS) -type d)
+OBJS = $(SRCS:%.c=$(BUILD)/%.o)
+CFLAGS  += $(addprefix -I,$(INC_DIRS))
 
-all: firmware.bin
+CFLAGS  = -mcpu=cortex-m4 -mthumb -Wall -Wextra -O0 -g -ffreestanding
+CFLAGS += $(addprefix -I,$(SRC_DIRS))
+CFLAGS += -MMD -MP
+LDFLAGS = -T linker/stm32f446re.ld -nostdlib
 
-firmware.elf: $(SRCS) linker.ld
-	$(CC) $(CFLAGS) $(LDFLAGS) $(SRCS) -o $@
+all: $(TARGET).bin
 
-firmware.bin: firmware.elf
+$(TARGET).elf: $(OBJS)
+	$(CC) $(CFLAGS) $(LDFLAGS) $^ -o $@
+	$(SIZE) $@
+
+$(TARGET).bin: $(TARGET).elf
 	$(OBJCOPY) -O binary $< $@
 
-flash: firmware.bin
-	st-flash write firmware.bin 0x08000000
+$(BUILD)/%.o: %.c
+	@mkdir -p $(dir $@)
+	$(CC) $(CFLAGS) -c $< -o $@
+
+flash: $(TARGET).bin
+	st-flash --reset write $< 0x08000000
 
 clean:
-	rm -f *.elf *.bin
+	rm -rf $(BUILD)
+
+-include $(OBJS:.o=.d)
 
 .PHONY: all flash clean
