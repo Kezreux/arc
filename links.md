@@ -3,3 +3,6 @@ STM32 chip information (RM0390)https://www.st.com/resource/en/reference_manual/r
 
 Nucleo F446RE board information
 https://www.st.com/resource/en/user_manual/um1724-stm32-nucleo64-boards-mb1136-stmicroelectronics.pdf
+
+Programming manual
+https://www.st.com/resource/en/programming_manual/pm0214-stm32-cortexm4-mcus-and-mpus-programming-manual-stmicroelectronics.pdf
