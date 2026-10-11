@@ -47,3 +47,10 @@ void gpio_toggle(GPIO_t *port, int pin)
 {
   port->ODR ^= (1 << pin);
 }
+
+
+void gpio_set_pull(GPIO_t *port, int pin, int pull)
+{
+    port->PUPDR &= ~(3U << (pin * 2));
+    port->PUPDR |=  ((uint32_t)pull << (pin * 2));
+}
